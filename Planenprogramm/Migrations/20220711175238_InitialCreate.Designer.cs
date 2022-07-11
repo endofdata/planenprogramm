@@ -6,48 +6,44 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Planenprogramm;
 
+#nullable disable
+
 namespace Planenprogramm.Migrations
 {
     [DbContext(typeof(Database))]
-    [Migration("20220710131141_InitialCreate")]
+    [Migration("20220711175238_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "5.0.17");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.6");
 
-            modelBuilder.Entity("Planenprogramm.Tarp", b =>
+            modelBuilder.Entity("Planenprogramm.Entities.Tarp", b =>
                 {
-                    b.Property<int>("TarpId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Annotation")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("Number")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("TarpCategoryId")
-                        .HasColumnType("INTEGER");
+                    b.HasKey("Id");
 
-                    b.Property<int>("TarpTypeId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("TarpId");
-
-                    b.HasIndex("TarpCategoryId");
-
-                    b.HasIndex("TarpTypeId");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Tarps");
                 });
 
-            modelBuilder.Entity("Planenprogramm.TarpCategory", b =>
+            modelBuilder.Entity("Planenprogramm.Entities.TarpCategory", b =>
                 {
-                    b.Property<int>("TarpCategoryId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -66,50 +62,42 @@ namespace Planenprogramm.Migrations
                     b.Property<int?>("Width")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("TarpCategoryId");
+                    b.HasKey("Id");
 
                     b.HasIndex("TarpTypeId");
 
-                    b.ToTable("TarpCategories");
+                    b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("Planenprogramm.TarpType", b =>
+            modelBuilder.Entity("Planenprogramm.Entities.TarpType", b =>
                 {
-                    b.Property<int>("TarpTypeId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("TarpTypeId");
+                    b.HasKey("Id");
 
                     b.ToTable("TarpTypes");
                 });
 
-            modelBuilder.Entity("Planenprogramm.Tarp", b =>
+            modelBuilder.Entity("Planenprogramm.Entities.Tarp", b =>
                 {
-                    b.HasOne("Planenprogramm.TarpCategory", "TarpCategory")
+                    b.HasOne("Planenprogramm.Entities.TarpCategory", "Category")
                         .WithMany("Tarps")
-                        .HasForeignKey("TarpCategoryId")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Planenprogramm.TarpType", "TarpType")
-                        .WithMany("Tarps")
-                        .HasForeignKey("TarpTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("TarpCategory");
-
-                    b.Navigation("TarpType");
+                    b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("Planenprogramm.TarpCategory", b =>
+            modelBuilder.Entity("Planenprogramm.Entities.TarpCategory", b =>
                 {
-                    b.HasOne("Planenprogramm.TarpType", "TarpType")
-                        .WithMany()
+                    b.HasOne("Planenprogramm.Entities.TarpType", "TarpType")
+                        .WithMany("Categories")
                         .HasForeignKey("TarpTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -117,14 +105,14 @@ namespace Planenprogramm.Migrations
                     b.Navigation("TarpType");
                 });
 
-            modelBuilder.Entity("Planenprogramm.TarpCategory", b =>
+            modelBuilder.Entity("Planenprogramm.Entities.TarpCategory", b =>
                 {
                     b.Navigation("Tarps");
                 });
 
-            modelBuilder.Entity("Planenprogramm.TarpType", b =>
+            modelBuilder.Entity("Planenprogramm.Entities.TarpType", b =>
                 {
-                    b.Navigation("Tarps");
+                    b.Navigation("Categories");
                 });
 #pragma warning restore 612, 618
         }

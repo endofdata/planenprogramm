@@ -4,20 +4,31 @@ using ExcelDataReader;
 using System.Linq;
 using static Planenprogramm.Constants;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Planenprogramm.Entities;
 //using System.Text.Encoding.CodePages;
 
 namespace Planenprogramm
 {
 	class Program
 	{
-		static string filePath = @"D:\Gamer\Documents\Planenprogramm\Planen.xlsx";
+
 		static void Main(string[] args)
 		{
+			var commandLine = CommandLine.Parse(args);
+
+			if (!commandLine.Validate())
+			{
+				CommandLine.ShowUsage();
+				return;
+			}
+
+
 			System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
-			using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+			using (var stream = File.Open(commandLine.InputPath, FileMode.Open, FileAccess.Read))
 			{
-				var database = new Database();
+				var database = new DatabaseFactory().CreateDbContext(new string[] { commandLine.DataDirectory });
 
 				// Ensures that the basic tarp types and categories are in the database
 				PrepareTarpTypesAndCategories(stream, database);
@@ -49,10 +60,8 @@ namespace Planenprogramm
 
 								database.Tarps.Add(new Tarp 
 								{ 
-									TarpTypeId = tarpType.TarpTypeId , 
-									TarpType = tarpType,
-									TarpCategoryId = tarpCategory.TarpCategoryId, 
-									TarpCategory = tarpCategory,
+									CategoryId = tarpCategory.Id, 
+									Category = tarpCategory,
 									Number = tarpNumber, 
 									Annotation = tarpAnnotation});
 							}
@@ -83,25 +92,23 @@ namespace Planenprogramm
 
 			foreach (var tarpType in database.TarpTypes)
 			{
-				Console.WriteLine($"{tarpType.TarpTypeId}: '{tarpType.Name}'");
+				Console.WriteLine($"{tarpType.Id}: '{tarpType.Name}'");
 			}
 
 			Console.WriteLine();
 			Console.WriteLine("TarpCategories:");
 
-			foreach (var tarpCategory in database.TarpCategories)
+			foreach (var tarpCategory in database.Categories)
 			{
-				Console.WriteLine($"{tarpCategory.TarpCategoryId}: '{tarpCategory.TarpType.Name}' '{tarpCategory.Name}'  '{tarpCategory.Length}' '{tarpCategory.Width}' '{tarpCategory.Additional}'");
+				Console.WriteLine($"{tarpCategory.Id}: '{tarpCategory.TarpType.Name}' '{tarpCategory.Name}'  '{tarpCategory.Length}' '{tarpCategory.Width}' '{tarpCategory.Additional}'");
 			}
 
 			Console.WriteLine();
 			Console.WriteLine("Tarps:");
 
-			foreach (var tarp in database.Tarps)
+			foreach (var tarp in database.Tarps.Include(t => t.Category).ThenInclude(c => c.TarpType))
 			{
-				var tarpType = database.TarpTypes.First(t => t.TarpTypeId == tarp.TarpTypeId).Name;
-
-				Console.WriteLine($"{tarp.TarpId}: '{tarp.Number}' '{tarpType}' '{tarp.Annotation}'");
+				Console.WriteLine($"{tarp.Id}: '{tarp.Number}' '{tarp.Category.TarpType.Name}' '{tarp.Category.Name}' '{tarp.Annotation}'");
 			}
 		}
 
@@ -137,17 +144,17 @@ namespace Planenprogramm
 		/// </remarks>
 		private static TarpCategory GetTarpCategory(Database database, TarpType tarpType, string tarpCategoryName)
 		{
-			var item = database.TarpCategories.FirstOrDefault(c => 
-				c.TarpTypeId == tarpType.TarpTypeId && 
+			var item = database.Categories.FirstOrDefault(c => 
+				c.TarpTypeId == tarpType.Id && 
 				c.TarpType.Name == tarpType.Name &&
 				c.Name == tarpCategoryName);
 
 			if (item == null)
 			{
-				item = database.TarpCategories.Add(new TarpCategory 
+				item = database.Categories.Add(new TarpCategory 
 				{
 					Name = tarpCategoryName, 
-					TarpTypeId = tarpType.TarpTypeId,
+					TarpTypeId = tarpType.Id,
 					TarpType = tarpType
 				}).Entity;
 			}
@@ -205,9 +212,9 @@ namespace Planenprogramm
 
 			foreach (var category in TarpCategoryBuilder.Build(stream, categoryTarpTypes.ToArray()))
 			{
-				if (!database.TarpCategories.Any(cat => cat.Name == category.Name && cat.TarpTypeId == category.TarpTypeId))
+				if (!database.Categories.Any(cat => cat.Name == category.Name && cat.TarpTypeId == category.TarpTypeId))
 				{
-					database.TarpCategories.Add(category);
+					database.Categories.Add(category);
 				}
 			}
 

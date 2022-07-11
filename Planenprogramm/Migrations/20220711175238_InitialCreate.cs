@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
+#nullable disable
+
 namespace Planenprogramm.Migrations
 {
     public partial class InitialCreate : Migration
@@ -10,20 +12,20 @@ namespace Planenprogramm.Migrations
                 name: "TarpTypes",
                 columns: table => new
                 {
-                    TarpTypeId = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TarpTypes", x => x.TarpTypeId);
+                    table.PrimaryKey("PK_TarpTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "TarpCategories",
+                name: "Categories",
                 columns: table => new
                 {
-                    TarpCategoryId = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
                     Length = table.Column<int>(type: "INTEGER", nullable: true),
@@ -33,12 +35,12 @@ namespace Planenprogramm.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TarpCategories", x => x.TarpCategoryId);
+                    table.PrimaryKey("PK_Categories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TarpCategories_TarpTypes_TarpTypeId",
+                        name: "FK_Categories_TarpTypes_TarpTypeId",
                         column: x => x.TarpTypeId,
                         principalTable: "TarpTypes",
-                        principalColumn: "TarpTypeId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -46,44 +48,32 @@ namespace Planenprogramm.Migrations
                 name: "Tarps",
                 columns: table => new
                 {
-                    TarpId = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    TarpTypeId = table.Column<int>(type: "INTEGER", nullable: false),
-                    TarpCategoryId = table.Column<int>(type: "INTEGER", nullable: false),
+                    CategoryId = table.Column<int>(type: "INTEGER", nullable: false),
                     Annotation = table.Column<string>(type: "TEXT", nullable: true),
                     Number = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tarps", x => x.TarpId);
+                    table.PrimaryKey("PK_Tarps", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Tarps_TarpCategories_TarpCategoryId",
-                        column: x => x.TarpCategoryId,
-                        principalTable: "TarpCategories",
-                        principalColumn: "TarpCategoryId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Tarps_TarpTypes_TarpTypeId",
-                        column: x => x.TarpTypeId,
-                        principalTable: "TarpTypes",
-                        principalColumn: "TarpTypeId",
+                        name: "FK_Tarps_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_TarpCategories_TarpTypeId",
-                table: "TarpCategories",
+                name: "IX_Categories_TarpTypeId",
+                table: "Categories",
                 column: "TarpTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tarps_TarpCategoryId",
+                name: "IX_Tarps_CategoryId",
                 table: "Tarps",
-                column: "TarpCategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tarps_TarpTypeId",
-                table: "Tarps",
-                column: "TarpTypeId");
+                column: "CategoryId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -92,7 +82,7 @@ namespace Planenprogramm.Migrations
                 name: "Tarps");
 
             migrationBuilder.DropTable(
-                name: "TarpCategories");
+                name: "Categories");
 
             migrationBuilder.DropTable(
                 name: "TarpTypes");

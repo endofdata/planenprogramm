@@ -5,6 +5,7 @@ using System.Linq;
 using System.Collections.Generic;
 using static Planenprogramm.Constants;
 using System.Text.RegularExpressions;
+using Planenprogramm.Entities;
 
 namespace Planenprogramm
 {
@@ -24,7 +25,7 @@ namespace Planenprogramm
 					throw new ArgumentException($"Nicht genügend 'TarpTypes' in Spalte {collumn}");
 				}
 				var tarpType = collumnTarpTypes[offset];
-				var tarpTypeId = tarpType.TarpTypeId;
+				var tarpTypeId = tarpType.Id;
 
 				using (var reader = ExcelReaderFactory.CreateReader(stream, new ExcelReaderConfiguration { LeaveOpen = true }))
 				{
@@ -35,9 +36,11 @@ namespace Planenprogramm
 							throw new InvalidOperationException("Nicht genug Zeilen vorhanden!");
 						}
 					}
+
 					var valueCount = 0;
 					var noValueCount = 0;
-					TarpCategory category = null;
+					TarpCategory? category = null;
+
 					while (reader.Read())
 					{
 						var cellValue = reader.GetString(collumn);
@@ -53,13 +56,14 @@ namespace Planenprogramm
 									category = new TarpCategory { Name = categoryName };
 									break;
 								case 1:
-									category.Length = Parse(cellValue);
+									// NFO: if value is greater zero, category is not null
+									category!.Length = Parse(cellValue);
 									break;
 								case 2:
-									category.Width = Parse(cellValue);
+									category!.Width = Parse(cellValue);
 									break;
 								case 3:
-									category.Additional = Parse(cellValue);
+									category!.Additional = Parse(cellValue);
 									break;
 								default:
 									throw new NotSupportedException("Denk dir einen schönen Fehlertext aus");

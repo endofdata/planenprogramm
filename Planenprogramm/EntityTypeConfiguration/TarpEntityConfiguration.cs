@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Planenprogramm.Entities;
 
 namespace Planenprogramm.EntityTypeConfiguration
 {
@@ -7,15 +8,12 @@ namespace Planenprogramm.EntityTypeConfiguration
 	{
 		public void Configure(EntityTypeBuilder<Tarp> builder)
 		{
-			builder.HasKey(tarp => tarp.TarpId);
-			builder.Property(tarp => tarp.TarpId)
+			builder.HasKey(tarp => tarp.Id);
+			builder.Property(tarp => tarp.Id)
 				.ValueGeneratedOnAdd();
 
-			builder.HasOne(tarp => tarp.TarpCategory)
+			builder.HasOne(tarp => tarp.Category)
 				.WithMany(cat => cat.Tarps);
-
-			builder.HasOne(tarp => tarp.TarpType)
-				.WithMany(ttype => ttype.Tarps);
 		}
 	}
 }
