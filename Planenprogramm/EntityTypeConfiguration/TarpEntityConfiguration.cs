@@ -12,6 +12,9 @@ namespace Planenprogramm.EntityTypeConfiguration
 			builder.Property(tarp => tarp.Id)
 				.ValueGeneratedOnAdd();
 
+			builder.Property(tarp => tarp.Annotation)
+				.IsRequired(false);
+
 			builder.HasOne(tarp => tarp.Category)
 				.WithMany(cat => cat.Tarps);
 		}

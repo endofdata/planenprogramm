@@ -30,6 +30,8 @@ namespace Planenprogramm
 			{
 				var database = new DatabaseFactory().CreateDbContext(new string[] { commandLine.DataDirectory });
 
+				ClearAllData(database);
+
 				// Ensures that the basic tarp types and categories are in the database
 				PrepareTarpTypesAndCategories(stream, database);
 
@@ -123,7 +125,7 @@ namespace Planenprogramm
 		/// </remarks>
 		private static TarpType GetTarpType(Database database, string tarpTypeName)
 		{
-			var item = database.TarpTypes.FirstOrDefault(t => t.Name.Equals(tarpTypeName));
+			var item = database.TarpTypes.Local.FirstOrDefault(t => t.Name.Equals(tarpTypeName));
 
 			if(item == null)
 			{
@@ -144,7 +146,7 @@ namespace Planenprogramm
 		/// </remarks>
 		private static TarpCategory GetTarpCategory(Database database, TarpType tarpType, string tarpCategoryName)
 		{
-			var item = database.Categories.FirstOrDefault(c => 
+			var item = database.Categories.Local.FirstOrDefault(c => 
 				c.TarpTypeId == tarpType.Id && 
 				c.TarpType.Name == tarpType.Name &&
 				c.Name == tarpCategoryName);
@@ -212,7 +214,7 @@ namespace Planenprogramm
 
 			foreach (var category in TarpCategoryBuilder.Build(stream, categoryTarpTypes.ToArray()))
 			{
-				if (!database.Categories.Any(cat => cat.Name == category.Name && cat.TarpTypeId == category.TarpTypeId))
+				if (!database.Categories.Local.Any(cat => cat.Name == category.Name && cat.TarpTypeId == category.TarpTypeId))
 				{
 					database.Categories.Add(category);
 				}
@@ -221,6 +223,21 @@ namespace Planenprogramm
 			database.SaveChanges();
 		}
 
+		/// <summary>
+		/// Clears all data currently stored in database.
+		/// </summary>
+		/// <param name="database">Database</param>
+		private static void ClearAllData(Database database)
+		{
+			database.Tarps.RemoveRange(database.Tarps);
+			database.SaveChanges();
+
+			database.Categories.RemoveRange(database.Categories);
+			database.SaveChanges();
+
+			database.TarpTypes.RemoveRange(database.TarpTypes);
+			database.SaveChanges();
+		}
 
 	}
 }

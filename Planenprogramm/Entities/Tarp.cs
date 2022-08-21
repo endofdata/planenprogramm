@@ -12,7 +12,7 @@
 			get; set;
 		}
 
-		public string Annotation
+		public string? Annotation
 		{
 			get; set;
 		} = null!;
