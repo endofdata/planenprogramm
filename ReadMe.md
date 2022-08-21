@@ -15,9 +15,17 @@ Für das Debuggen in VisualStudio können die Parameter relativ zur ausführbare
 
 Es werden drei Datenbanktabellen befüllt: ```TarpTypes``` für die Planentypen, ```TarpCategories``` für die Kategorien und ```Tarps``` für die eigentlichen Planen. Die Kategorien-Namen ('Typ A', 'Typ B'...) wurden für die unterschiedlichen Planentypen wiederverwendet. Daher verweiste jede ```TarpCategory``` auf einen ```TarpType```.
 
-## Fehler
+# In Planung
 
-Beim automatischen Ergänzen fehlender Kategorien (s.u: [Die Quelldaten](#die-quelldaten)) werden derzeit mehrfache Einträge generiert.
+## Abfrageprogramm
+
+Ein Programm für ```Raspberry Pi``` soll eine Reihe von vordefinierten Datenbank-Anfragen ermöglichen und das Ergebnis tabellarisch darstellen.
+
+Der Datenbestand soll auch in Tabellenform (wenn möglich: Excel-Format) exportierbar sein.
+
+## Datenpflege
+
+Der Datenbestand soll auch nachbearbeitet werden können. Der Zugriff für die Bearbeitung soll über Benutzername / Passwort geschützt sein. Unter Umständen ist hierfür ein eigenes Programm sinnvoll.
 
 
 # Die Quelldaten 
@@ -49,15 +57,15 @@ dotnet add package Microsoft.EntityFrameworkCore.Design
 
 ## Datenbank-Migration erstellen
 
-Für das Anlegen der Datenbank aus dem Modell sowie nach Veränderungen am Modell können *Migrationen* erstellt werden. Der folgende Befehl erstellt eine Migration mit dem Namen *Initial*. Weitere Migrationen sollten andere sprechende Namen verwenden.
+Für das Anlegen der Datenbank aus dem Modell sowie nach Veränderungen am Modell können *Migrationen* erstellt werden. Der folgende Befehl erstellt eine Migration mit dem Namen *Initial*. Weitere Migrationen sollten andere sprechende Namen verwenden. Dabei werden die Parameter hinter dem ```--``` an die Methode ```DatabaseFactory.CreateContext()``` übergeben, die den ersten (und einzigen) Parameter als Datenpfad für die SQLite-Datenbank verwendet.
 
 ```PS
-dotnet ef migrations add Initial
+dotnet ef migrations add Initial -- .\data
 ```
 
 ## Datenbank initialisieren oder aktualisieren
 
-Mit dem folgenden Befehl wird die Datenbank entsprechend der Migrationen aktualisiert. Dabei werden die Parameter hinter dem ```--``` an die Methode ```DatabaseFactory.CreateContext()``` übergeben, die den ersten (und einzigen) Parameter als Datenpfad für die SQLite-Datenbank verwendet.
+Mit dem folgenden Befehl wird die Datenbank entsprechend der Migrationen aktualisiert. Die Parameter hinter dem ```--``` werden auch hier an die ```DatabaseFactory``` übergeben.
 
 ```PS
 dotnet ef database update -- .\data
