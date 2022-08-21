@@ -22,6 +22,16 @@ namespace Planenprogramm
 			get; set;
 		}
 
+		public DbSet<Damage> Damages
+		{
+			get; set;
+		}
+
+		public DbSet<TarpDamage> TarpDamages
+		{
+			get; set;
+		}
+
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 		public Database(DbContextOptions options) : base(options)
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -47,6 +57,8 @@ namespace Planenprogramm
 			new TarpEntityConfiguration().Configure(modelBuilder.Entity<Tarp>());
 			new TarpTypeEntityConfiguration().Configure(modelBuilder.Entity<TarpType>());
 			new TarpCategoryEntityConfiguration().Configure(modelBuilder.Entity<TarpCategory>());
+			new DamageEntityConfiguration().Configure(modelBuilder.Entity<Damage>());
+			new TarpDamageEntityConfiguration().Configure(modelBuilder.Entity<TarpDamage>());
 		}
 	}
 }

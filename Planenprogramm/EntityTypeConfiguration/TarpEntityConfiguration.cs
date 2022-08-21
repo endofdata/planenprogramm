@@ -17,6 +17,9 @@ namespace Planenprogramm.EntityTypeConfiguration
 
 			builder.HasOne(tarp => tarp.Category)
 				.WithMany(cat => cat.Tarps);
+
+			builder.HasMany(tarp => tarp.TarpDamages)
+				.WithOne(td => td.Tarp);
 		}
 	}
 }

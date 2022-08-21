@@ -6,6 +6,7 @@ using static Planenprogramm.Constants;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Planenprogramm.Entities;
+using System.Globalization;
 //using System.Text.Encoding.CodePages;
 
 namespace Planenprogramm
@@ -59,13 +60,21 @@ namespace Planenprogramm
 								var tarpType = GetTarpType(database, tarpTypeName.Trim());
 								var tarpCategoryName = reader.GetString(IndexTarpCategory);
 								var tarpCategory = GetTarpCategory(database, tarpType, tarpCategoryName);
-
-								database.Tarps.Add(new Tarp 
+								
+								var tarpEntity = database.Tarps.Add(new Tarp 
 								{ 
 									CategoryId = tarpCategory.Id, 
 									Category = tarpCategory,
 									Number = tarpNumber, 
-									Annotation = tarpAnnotation});
+									Annotation = tarpAnnotation
+								});
+
+								var tarpDamages = reader.GetString(IndexDamages);
+
+								if (!string.IsNullOrEmpty(tarpDamages))
+								{
+									UpdateTarpDamages(database, tarpEntity.Entity, tarpDamages);
+								}
 							}
 							
 						}
@@ -77,6 +86,30 @@ namespace Planenprogramm
 				DisplayDatabase(database);
 			}
 
+		}
+
+		/// <summary>
+		/// Creates tarp-damage relations for a given <paramref name="tarpId"/> from a string of <paramref name="damageCodeList"/>
+		/// </summary>
+		/// <param name="database">Database</param>
+		/// <param name="tarpId">ID of damaged tarp</param>
+		/// <param name="damageCodeList">Space-separated list of damage codes</param>
+		private static void UpdateTarpDamages(Database database, Tarp tarp, string damageCodeList)
+		{
+			var damageCodes = damageCodeList.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+			foreach (var code in damageCodes.Select(c => char.ToUpper(c[0], CultureInfo.CurrentCulture)))
+			{
+				var damage = database.Damages.Local.FirstOrDefault(d => d.Code == code);
+
+				if (damage == null)
+				{
+					damage = database.Damages.Add(new Damage { Code = code, Description = "undefiniert" }).Entity;
+				}
+				database.TarpDamages.Add(new TarpDamage { Damage = damage, Tarp = tarp });
+			}
+
+			database.SaveChanges();
 		}
 
 		/// <summary>
@@ -113,6 +146,8 @@ namespace Planenprogramm
 				Console.WriteLine($"{tarp.Id}: '{tarp.Number}' '{tarp.Category.TarpType.Name}' '{tarp.Category.Name}' '{tarp.Annotation}'");
 			}
 		}
+
+		
 
 		/// <summary>
 		/// Gets the tarp type with the specified <paramref name="tarpTypeName"/>.
@@ -210,7 +245,22 @@ namespace Planenprogramm
 		/// </remarks>
 		private static void PrepareTarpTypesAndCategories(Stream stream, Database database)
 		{
+			if (!stream.CanSeek)
+			{
+				throw new NotSupportedException("Only seekable input streams are supported.");
+			}
+
 			var categoryTarpTypes = GetCategoryTarpTypes(database).ToArray();
+
+			foreach (var damage in DamageBuilder.Build(stream))
+			{
+				if (!database.Damages.Local.Any(d => d.Code == damage.Code))
+				{
+					database.Damages.Add(damage);
+				}
+			}
+
+			stream.Position = 0;
 
 			foreach (var category in TarpCategoryBuilder.Build(stream, categoryTarpTypes.ToArray()))
 			{
@@ -219,6 +269,8 @@ namespace Planenprogramm
 					database.Categories.Add(category);
 				}
 			}
+
+			stream.Position = 0;
 
 			database.SaveChanges();
 		}
@@ -236,6 +288,12 @@ namespace Planenprogramm
 			database.SaveChanges();
 
 			database.TarpTypes.RemoveRange(database.TarpTypes);
+			database.SaveChanges();
+
+			database.TarpDamages.RemoveRange(database.TarpDamages);
+			database.SaveChanges();
+
+			database.Damages.RemoveRange(database.Damages);
 			database.SaveChanges();
 		}
 

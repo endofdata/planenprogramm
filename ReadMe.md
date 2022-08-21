@@ -13,13 +13,20 @@ Für das Debuggen in VisualStudio können die Parameter relativ zur ausführbare
 
 # Status
 
-Es werden drei Datenbanktabellen befüllt: ```TarpTypes``` für die Planentypen, ```TarpCategories``` für die Kategorien und ```Tarps``` für die eigentlichen Planen. Die Kategorien-Namen ('Typ A', 'Typ B'...) wurden für die unterschiedlichen Planentypen wiederverwendet. Daher verweiste jede ```TarpCategory``` auf einen ```TarpType```.
+Es werden fünf Datenbanktabellen befüllt: 
+- ```TarpTypes``` für die Planentypen
+- ```TarpCategories``` für die Kategorien
+- ```Tarps``` für die eigentlichen Planen
+- ```Damages``` für Schadensdefinitionen
+- ```TarpDamages``` für die Zuordnung von Planen und Schadensdefinitionen. 
+
+Die Kategorien-Namen ('Typ A', 'Typ B'...) wurden für die unterschiedlichen Planentypen wiederverwendet. Daher verweiste jede ```TarpCategory``` auf einen ```TarpType```.
 
 # In Planung
 
 ## Abfrageprogramm
 
-Ein Programm für ```Raspberry Pi``` soll eine Reihe von vordefinierten Datenbank-Anfragen ermöglichen und das Ergebnis tabellarisch darstellen.
+Ein Programm für ```Raspberry Pi``` soll eine Reihe von vordefinierten Datenbank-Anfragen ermöglichen und das Ergebnis tabellarisch darstellen. Draft für die Abfragen siehe *Planenprogramm Menue Entwurf.txt*
 
 Der Datenbestand soll auch in Tabellenform (wenn möglich: Excel-Format) exportierbar sein.
 

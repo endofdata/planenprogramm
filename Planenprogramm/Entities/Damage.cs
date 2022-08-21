@@ -2,29 +2,19 @@
 
 namespace Planenprogramm.Entities
 {
-	class Tarp
+	class Damage
 	{
 		public int Id
 		{
 			get; set;
 		}
 
-		public int CategoryId
+		public char Code
 		{
 			get; set;
 		}
 
-		public string? Annotation
-		{
-			get; set;
-		} = null!;
-
-		public int Number
-		{
-			get; set;
-		}
-
-		public TarpCategory Category
+		public string Description
 		{
 			get; set;
 		} = null!;

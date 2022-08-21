@@ -1,0 +1,21 @@
+Plane(n) anhand von Nummer ausgeben  (sortiert nach Nummer)
+Input: mehrere Nummern, Ausgabe alles zu den gewählten Planen
+
+Plane(n) anhand von Kategorie ausgeben (Automatisch sortiert nach Nummer) (Filtermöglichkeit Zustand)
+Input: Kategorie, dann Filter nach Zustand
+
+Plane(n) anhand des Zustands ausgeben (automatisch sortiert nach Kategorie A-Z) (Filtermöglichkeit Kategorie)
+Input: Zustand, dann Filter nach Kategorie
+
+Plane(n) anhand von Typ ausgeben (auwahlmöglichkeit der Typen) 
+(Filtermöglichkeit Zustand/Kategorie)
+Input: Typ, dann Filter nach Zustand / Kategorie
+
+Plane(n) anhand von Fehlercode (Filtermöglichkeit Fehlercode)
+
+Legende anzeigen
+	Legende:
+		Planenkategorie:
+		Zustand:
+
+Ausgabe: Nummer, Planentyp, Planenkategorie, Zustand, Anmerkung

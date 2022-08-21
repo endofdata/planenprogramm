@@ -20,7 +20,18 @@ namespace Planenprogramm
 		/// Anzahl der Spalten der Legende von Maßen der Planenkategorien
 		/// </summary>
 		public const int CountCollumnCategories = 7;
-
+		/// <summary>
+		/// Index der Spalte, in der die Fehlercodes beschrieben werden
+		/// </summary>
+		public const int IndexDamages = 6;
+		/// <summary>
+		/// Nummer der Zeile, ab der die Fehlercodes beschrieben werden
+		/// </summary>
+		public const int RowDamages = 7;
+		/// <summary>
+		/// Anzahl der Fehlercode-Beschreibungen
+		/// </summary>
+		public const int NumDamages = 6;
 		/// <summary>
 		/// Index der Spalte für Nummern
 		/// </summary>
