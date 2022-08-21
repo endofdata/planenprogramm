@@ -1,0 +1,33 @@
+BEGIN TRANSACTION;
+DROP TABLE IF EXISTS "Tarps";
+CREATE TABLE IF NOT EXISTS "Tarps" (
+	"Id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"CategoryId"	INTEGER NOT NULL,
+	"Annotation"	TEXT,
+	"Number"	INTEGER NOT NULL,
+	CONSTRAINT "FK_Tarps_Categories_CategoryId" FOREIGN KEY("CategoryId") REFERENCES "Categories"("Id") ON DELETE CASCADE
+);
+DROP TABLE IF EXISTS "Categories";
+CREATE TABLE IF NOT EXISTS "Categories" (
+	"Id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"Name"	TEXT,
+	"Length"	INTEGER,
+	"Width"	INTEGER,
+	"Additional"	INTEGER,
+	"TarpTypeId"	INTEGER NOT NULL,
+	CONSTRAINT "FK_Categories_TarpTypes_TarpTypeId" FOREIGN KEY("TarpTypeId") REFERENCES "TarpTypes"("Id") ON DELETE CASCADE
+);
+DROP TABLE IF EXISTS "TarpTypes";
+CREATE TABLE IF NOT EXISTS "TarpTypes" (
+	"Id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"Name"	TEXT
+);
+DROP INDEX IF EXISTS "IX_Tarps_CategoryId";
+CREATE INDEX IF NOT EXISTS "IX_Tarps_CategoryId" ON "Tarps" (
+	"CategoryId"
+);
+DROP INDEX IF EXISTS "IX_Categories_TarpTypeId";
+CREATE INDEX IF NOT EXISTS "IX_Categories_TarpTypeId" ON "Categories" (
+	"TarpTypeId"
+);
+COMMIT;
