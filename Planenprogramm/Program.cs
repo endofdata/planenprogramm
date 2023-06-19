@@ -89,10 +89,10 @@ namespace Planenprogramm
 		}
 
 		/// <summary>
-		/// Creates tarp-damage relations for a given <paramref name="tarpId"/> from a string of <paramref name="damageCodeList"/>
+		/// Creates tarp-damage relations for a given <paramref name="tarp"/> from a string of <paramref name="damageCodeList"/>
 		/// </summary>
 		/// <param name="database">Database</param>
-		/// <param name="tarpId">ID of damaged tarp</param>
+		/// <param name="tarp">Damaged tarp</param>
 		/// <param name="damageCodeList">Space-separated list of damage codes</param>
 		private static void UpdateTarpDamages(Database database, Tarp tarp, string damageCodeList)
 		{
