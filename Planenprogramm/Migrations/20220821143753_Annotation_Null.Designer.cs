@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Planenprogramm;
+using Tarps.Datalayer;
 
 #nullable disable
 
 namespace Planenprogramm.Migrations
 {
-    [DbContext(typeof(Database))]
+    [DbContext(typeof(TarpsDbContext))]
     [Migration("20220821143753_Annotation_Null")]
     partial class Annotation_Null
     {

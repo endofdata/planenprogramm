@@ -3,13 +3,13 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Planenprogramm;
+using Tarps.Datalayer;
 
 #nullable disable
 
 namespace Planenprogramm.Migrations
 {
-    [DbContext(typeof(Database))]
+    [DbContext(typeof(TarpsDbContext))]
     partial class DatabaseModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

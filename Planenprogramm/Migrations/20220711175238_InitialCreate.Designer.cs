@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Planenprogramm;
+using Tarps.Datalayer;
 
 #nullable disable
 
 namespace Planenprogramm.Migrations
 {
-    [DbContext(typeof(Database))]
+    [DbContext(typeof(TarpsDbContext))]
     [Migration("20220711175238_InitialCreate")]
     partial class InitialCreate
     {

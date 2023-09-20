@@ -5,7 +5,8 @@ using System.Linq;
 using static Planenprogramm.Constants;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using Planenprogramm.Entities;
+using Tarps.Datalayer.Entities;
+using Tarps.Datalayer;
 using System.Globalization;
 //using System.Text.Encoding.CodePages;
 
@@ -29,7 +30,7 @@ namespace Planenprogramm
 
 			using (var stream = File.Open(commandLine.InputPath, FileMode.Open, FileAccess.Read))
 			{
-				var database = new DatabaseFactory().CreateDbContext(new string[] { commandLine.DataDirectory });
+				using var database = new TarpsDbContextFactory().CreateDbContext(new string[] { commandLine.DataDirectory });
 
 				ClearAllData(database);
 
@@ -94,7 +95,7 @@ namespace Planenprogramm
 		/// <param name="database">Database</param>
 		/// <param name="tarp">Damaged tarp</param>
 		/// <param name="damageCodeList">Space-separated list of damage codes</param>
-		private static void UpdateTarpDamages(Database database, Tarp tarp, string damageCodeList)
+		private static void UpdateTarpDamages(TarpsDbContext database, Tarp tarp, string damageCodeList)
 		{
 			var damageCodes = damageCodeList.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
@@ -116,7 +117,7 @@ namespace Planenprogramm
 		/// Displays the current database items on the console.
 		/// </summary>
 		/// <param name="database"></param>
-		private static void DisplayDatabase(Database database)
+		private static void DisplayDatabase(TarpsDbContext database)
 		{
 			if (database is null)
 			{
@@ -158,7 +159,7 @@ namespace Planenprogramm
 		/// <remarks>
 		/// A new tarp type item is added if not matching tarp type was found.
 		/// </remarks>
-		private static TarpType GetTarpType(Database database, string tarpTypeName)
+		private static TarpType GetTarpType(TarpsDbContext database, string tarpTypeName)
 		{
 			var item = database.TarpTypes.Local.FirstOrDefault(t => t.Name.Equals(tarpTypeName));
 
@@ -179,7 +180,7 @@ namespace Planenprogramm
 		/// <remarks>
 		/// A new category item is added if no matching category was found.
 		/// </remarks>
-		private static TarpCategory GetTarpCategory(Database database, TarpType tarpType, string tarpCategoryName)
+		private static TarpCategory GetTarpCategory(TarpsDbContext database, TarpType tarpType, string tarpCategoryName)
 		{
 			var item = database.Categories.Local.FirstOrDefault(c => 
 				c.TarpTypeId == tarpType.Id && 
@@ -213,7 +214,7 @@ namespace Planenprogramm
 		/// returns the collection of tarp type IDs.
 		/// </para>
 		/// </remarks>
-		private static IEnumerable<TarpType> GetCategoryTarpTypes(Database database)
+		private static IEnumerable<TarpType> GetCategoryTarpTypes(TarpsDbContext database)
 		{
 			// Create the tarp types for which category definitions are available, if they do not exist in database
 			foreach (var tarpType in CategoryTarpTypes)
@@ -236,14 +237,14 @@ namespace Planenprogramm
 		/// <param name="database">Database</param>
 		/// <remarks>
 		/// <para>The collection <see cref="CategoryTarpTypes"/> defines for which tarp types categories are defined in the
-		/// input document. This method invokes <see cref="GetCategoryTarpTypes(Database)"/> first to ensure that the
+		/// input document. This method invokes <see cref="GetCategoryTarpTypes(TarpsDbContext)"/> first to ensure that the
 		/// corresponding database entities are available.
 		/// </para>
 		/// <para>In a second step <see cref="TarpCategoryBuilder.Build(Stream, int[])"/> is called to parse the category
 		/// definitions from the input document and add them to the database, if they do not exist.
 		/// </para>
 		/// </remarks>
-		private static void PrepareTarpTypesAndCategories(Stream stream, Database database)
+		private static void PrepareTarpTypesAndCategories(Stream stream, TarpsDbContext database)
 		{
 			if (!stream.CanSeek)
 			{
@@ -279,7 +280,7 @@ namespace Planenprogramm
 		/// Clears all data currently stored in database.
 		/// </summary>
 		/// <param name="database">Database</param>
-		private static void ClearAllData(Database database)
+		private static void ClearAllData(TarpsDbContext database)
 		{
 			database.Tarps.RemoveRange(database.Tarps);
 			database.SaveChanges();
