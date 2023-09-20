@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-
-namespace Planenprogramm.Entities
+﻿namespace Tarps.Datalayer.Entities
 {
-	class Tarp
+	public class Tarp
 	{
 		public int Id
 		{

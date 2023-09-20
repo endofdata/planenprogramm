@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Planenprogramm.Entities;
+using Tarps.Datalayer.Entities;
 
-namespace Planenprogramm.EntityTypeConfiguration
+namespace Tarps.Datalayer.EntityTypeConfiguration
 {
 	class TarpTypeEntityConfiguration : IEntityTypeConfiguration<TarpType>
 	{

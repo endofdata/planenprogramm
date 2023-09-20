@@ -1,40 +1,39 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
-using Planenprogramm.Entities;
-using Planenprogramm.EntityTypeConfiguration;
-using System;
+using Tarps.Datalayer.Entities;
+using Tarps.Datalayer.EntityTypeConfiguration;
 
-namespace Planenprogramm
+namespace Tarps.Datalayer
 {
-	class Database : DbContext
+	public class TarpsDbContext : DbContext
 	{
 		public DbSet<Tarp> Tarps
 		{
 			get; set;
-		}
+		} = null!;
+
 		public DbSet<TarpType> TarpTypes
 		{
 			get; set;
-		}
+		} = null!;
+
 		public DbSet<TarpCategory> Categories
 		{
 			get; set;
-		}
+		} = null!;
 
 		public DbSet<Damage> Damages
 		{
 			get; set;
-		}
+		} = null!;
 
 		public DbSet<TarpDamage> TarpDamages
 		{
 			get; set;
-		}
+		} = null!;
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-		public Database(DbContextOptions options) : base(options)
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+		public TarpsDbContext(DbContextOptions options) : base(options)
 		{
 			
 		}

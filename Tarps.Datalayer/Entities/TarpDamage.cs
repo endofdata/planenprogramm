@@ -1,6 +1,6 @@
-﻿namespace Planenprogramm.Entities
+﻿namespace Tarps.Datalayer.Entities
 {
-	internal class TarpDamage
+	public class TarpDamage
 	{
 		public int Id
 		{
