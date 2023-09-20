@@ -6,3 +6,4 @@ obj
 Planen.xlsx
 data/
 /Planenprogramm/Properties/launchSettings.json
+/Tarps.WebAPI/appsettings.Development.json
