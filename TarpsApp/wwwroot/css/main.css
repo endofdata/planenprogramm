@@ -1,0 +1,144 @@
+
+:root {
+	--folke-blue: #174184;
+	--folke-green: #0e9638;
+	--folke-yellow: #fccc66;
+	--folke-white: #fefefe;
+}
+
+body {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	margin: 0px;
+	min-width: 320px;
+}
+
+form {
+	align-self: center;
+	margin: 0em 0em 1.5em 0em;
+}
+
+button {
+	color: var(--folke-white);
+	background-color: var(--folke-blue);
+	border: 1px solid black;
+	border-radius: 0.2em;
+	padding: 0.2rem 1rem;
+	min-width: 10em;
+}
+
+button:hover {
+	color: var(--folke-yellow);
+}
+
+button:active {
+	color: var(--folke-blue);
+	background-color: var(--folke-yellow);
+	font-weight: bold;
+}
+
+.menu {
+	display: flex;
+	background-color: var(--folke-blue);
+	justify-content: right;
+}
+
+.menu > div {
+	color: var(--folke-white);
+	padding: 0.6em;
+}
+
+.menu > .user {
+	font-weight: bold;
+}
+
+.content {
+	background-color: var(--folke-white);
+	display: grid;
+	justify-content: stretch;
+	padding: 1em;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+th {
+	background: var(--folke-blue);
+	color: var(--folke-white);
+	font-weight: 600;
+}
+
+td,
+th {
+	padding: 2px;
+	text-align: left;
+	vertical-align: top;
+}
+
+div.table {
+	display: grid;
+}
+
+.header {
+	background-color: var(--folke-blue);
+	color: white;
+}
+
+.login-form {
+	display: flex;
+	justify-content: center;
+	justify-self: center;
+	background-color: var(--folke-yellow);
+	border: 2px solid var(--folke-blue);
+	width: fit-content;
+	border-radius: 0.3em;	
+}
+
+.label {
+	color: var(--folke-blue);
+	font-weight: bold;
+}
+
+.login-form .buttons {
+	padding: 1em;
+}
+
+table.dialog {	
+	margin-left: auto;
+	margin-right: auto;
+}
+
+table.dialog tr {
+	display: grid;
+	background-color: var(--folke-yellow);
+}
+
+table.dialog td {
+	margin: auto 10px;
+}
+
+table.dialog tr.buttonpanel {
+	display: grid;
+	grid-template-columns: auto;
+	padding: 4px;
+}
+
+table.dialog tr.buttonpanel td {
+	text-align: center;
+}
+
+table.filter {
+	min-width: 50vw;
+}
+
+table.filter tr {
+	grid-template-columns: 1fr 2fr;
+}
+
+table.zebra-list tr:nth-of-type(odd) {
+	background: #eee;
+}
+
+table.zebra-list td {
+	border: 1px solid #ccc;
+}

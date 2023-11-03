@@ -1,0 +1,131 @@
+﻿@using Tarps.Datalayer;
+@using Tarps.Datalayer.Entities;
+@using Microsoft.EntityFrameworkCore;
+@inject Tarps.Datalayer.TarpsDbContext TarpsContext;
+
+@page "/"
+
+<div class="main">
+    <div>
+        <form action="#" method="post">
+            <table class="dialog filter">
+                <thead>
+                    <tr>
+                        <th>Filter</th>
+                        <th>Wert</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var s in _selection.Selectors)
+                    {
+                        var loopIndex = 0;
+                        <tr>
+                            <td>
+                                <select id="select_by_@loopIndex" name="select_by_@loopIndex">
+                                    <option value="None">- alle -</option>
+                                    <option value="@TarpsProperties.TARP_NUMBER">Nummer</option>
+                                    <option value="@TarpsProperties.CAT_NAME">Kategorie</option>
+                                    <option value="@TarpsProperties.TYPE_NAME">Planen-Typ</option>
+                                    <option value="@TarpsProperties.DMG_CODE">Schaden</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input id="select_value_@loopIndex" name="select_value_@loopIndex" />
+                            </td>
+                        </tr>
+                        loopIndex++;
+                    }
+                    <tr>
+                        <th>Sortierung</th>
+                        <th>Absteigend</th>
+                    </tr>
+                    @foreach (var o in _selection.Sequence)
+                    {
+                        var loopIndex = 0;
+                        <tr>
+                            <td>
+                                <select id="order_by_@loopIndex" name="order_by_@loopIndex">
+                                    <option value="None">-- unsortiert --</option>
+                                    <option value="@TarpsProperties.TARP_NUMBER">Nummer</option>
+                                    <option value="@TarpsProperties.CAT_NAME">Kategorie</option>
+                                    <option value="@TarpsProperties.TYPE_NAME">Planen-Typ</option>
+                                    <option value="@TarpsProperties.DMG_CODE">Schaden</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="checkbox" id="order_dir_@loopIndex" name="order_dir_@loopIndex" />
+                            </td>
+                        </tr>
+                        loopIndex++;
+                    }
+                    <tr>
+                        <th></th>
+                        <th>Auswahl</th>
+                    </tr>
+                    <tr>
+                        <td />
+                        <td>
+                            <input id="selected_numbers" name="selected_numbers" value="@_selection.SelectedNumbers" />
+                        </td>
+                    </tr>
+                    <tr class="buttonpanel">
+                        <td><button type="submit">Aktualisieren</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+    <table class="zebra-list">
+        <thead>
+            <tr>
+                <th></th>
+                <th class="numeric">Nr.</th>
+                <th>Typ</th>
+                <th>Kat.</th>
+                <th>Anmerkung</th>
+                <th>Schaden</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (_tarps != null)
+            {
+                foreach (var tarp in _tarps)
+                {
+                    <tr>
+                        <td>
+                            @*                    <span>Selected: @tarp.IsSelected</span>
+                    {% if tarp.is_selected == True %}
+                    <input type="checkbox" id="tarp_selected" name="tarp_selected" checked="checked" />
+                    {% else %}
+                    <input type="checkbox" id="tarp_selected" name="tarp_selected" />
+                    {% endif %} *@
+                        </td>
+                        <td class="numeric">@tarp.Number</td>
+                        <td>@tarp.Category.TarpType.Name</td>
+                        <td>@tarp.Category.Name</td>
+                        <td>@tarp.Annotation</td>
+                        <td>
+                            @{
+                                var damageList = string.Join(", ", tarp.TarpDamages.Select(td => td.Damage.Code));
+                            }
+                            @damageList
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    List<Tarp>? _tarps;
+    TarpsSelection _selection = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _tarps = await TarpsContext.Tarps
+            .Include(t => t.Category).ThenInclude(c => c.TarpType)
+            .Include(t => t.TarpDamages).ThenInclude(td => td.Damage)
+            .ToListAsync();
+    }
+}
