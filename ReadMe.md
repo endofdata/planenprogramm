@@ -22,11 +22,17 @@ Es werden fünf Datenbanktabellen befüllt:
 
 Die Kategorien-Namen ('Typ A', 'Typ B'...) wurden für die unterschiedlichen Planentypen wiederverwendet. Daher verweiste jede ```TarpCategory``` auf einen ```TarpType```.
 
+Der aktuelle Stand des [Abfrageprogramms in Python](https://github.com/endofdata/planenansicht) ermöglicht die tabellarische Planenansicht inklusive Filtermöglichkeiten. Eine Benutzerverwaltung ist nur in Grundzügen vorhanen.
+
+Die Neuauflage in C# (`TarpsApp`) stellt bislang nur eine schlecht formatierte Tabelle mit den Planendatan dar.
+
 # In Planung
 
 ## Abfrageprogramm
 
-Ein Programm für ```Raspberry Pi``` soll eine Reihe von vordefinierten Datenbank-Anfragen ermöglichen und das Ergebnis tabellarisch darstellen. Draft für die Abfragen siehe *Planenprogramm Menue Entwurf.txt*
+Ein Programm, ursprünglich für ```Raspberry Pi```, soll eine Reihe von vordefinierten Datenbank-Anfragen ermöglichen und das Ergebnis tabellarisch darstellen. Draft für die Abfragen siehe *Planenprogramm Menue Entwurf.txt*.
+
+Wegen geänderter Hardware-Voraussetzungen kommt mittlerweile auch ein in C# geschriebenes Abfrage-Programm in Frage.
 
 Der Datenbestand soll auch in Tabellenform (wenn möglich: Excel-Format) exportierbar sein.
 
